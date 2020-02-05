@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Upload Files Laravel">
+  <title>Upload Files Laravel</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link href="https://federicozacayan.github.io/tutorial/css/prism.css" rel="stylesheet">
+<style>
+p {
+    margin: 0;
+}
+</style>
+<style>textarea {
+  width: 100%;
+  margin: .5rem auto; }
+
+.buttons button {
+  cursor: pointer;
+  background-color: #00b7ff;
+  padding: .5rem;
+  margin: .5rem;
+  border-radius: 1rem;
+  color: white;
+  text-transform: capitalize;
+  display: inline-block;
+  width: auto; }
+
+button {
+  width: 50%; }
+
+.styler {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 1rem; }
+  .styler .background {
+    position: fixed;
+    background-color: #000;
+    opacity: .5;
+    height: 200px;
+    top: 0;
+    margin-left: -1rem;
+    float: left;
+    width: 100%;
+    z-index: -1;
+    height: 100vh; }
+</style></head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"><div class="container"><div><div><h1>Upload Files Laravel</h1><p>Once the project is ready generate a model, controller.</p><pre class="  language-html"><code class="  language-html">php artisan make:model Upload --all</code></pre><p>Modify the model adding $fillable array.</p><pre class="  language-javascript"><code class="  language-javascript"><span class="token operator">...</span>
+<span class="token keyword">protected</span> $fillable <span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'friendly_file_name'</span><span class="token punctuation">,</span><span class="token string">'location_file_name'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token operator">...</span></code></pre><p>Add those fields to the migration.</p><pre class="  language-javascript"><code class="  language-javascript"><span class="token operator">...</span>
+$table<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">increments</span><span class="token punctuation">(</span><span class="token string">'id'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+$table<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">string</span><span class="token punctuation">(</span><span class="token string">'friendly_file_name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// check it out</span>
+$table<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">string</span><span class="token punctuation">(</span><span class="token string">'location_file_name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// check it out</span>
+$table<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">timestamps</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">...</span></code></pre><p>Run the migrations.</p><pre class="  language-php"><code class="  language-php">php artisan migrate:refresh </code></pre><p>Add the route.</p><pre class="  language-javascript"><code class="  language-javascript">Route<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">apiResource</span><span class="token punctuation">(</span><span class="token string">'upload'</span><span class="token punctuation">,</span><span class="token string">'UploadController'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Add the view.</p><pre class="  language-html"><code class="  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{{ route('upload.store') }}<span class="token punctuation">"</span></span> 
+    <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>POST<span class="token punctuation">"</span></span> 
+    <span class="token attr-name">enctype</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>multipart/form-data<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    {{ csrf_field() }}
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span> Save <span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span></code></pre><p>Add the controller.</p><pre class="  language-javascript"><code class="  language-javascript"><span class="token operator">&lt;</span><span class="token operator">?</span>php
+namespace App\Http\Controllers<span class="token punctuation">;</span>
+use App\Upload<span class="token punctuation">;</span>
+use Illuminate\Http\Request<span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name">UploadController</span> <span class="token keyword">extends</span> <span class="token class-name">Controller</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">view</span><span class="token punctuation">(</span><span class="token string">'upload.form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token parameter">Request $request</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        $<span class="token keyword">var</span> <span class="token operator">=</span> $request<span class="token operator">-</span><span class="token operator">&gt;</span>image<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">store</span><span class="token punctuation">(</span><span class="token string">'images'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        $update <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Upload</span><span class="token punctuation">;</span>
+        $update<span class="token operator">-</span><span class="token operator">&gt;</span>friendly_file_name <span class="token operator">=</span> <span class="token string">'File name you want'</span><span class="token punctuation">;</span>
+        $update<span class="token operator">-</span><span class="token operator">&gt;</span>location_file_name <span class="token operator">=</span> $<span class="token keyword">var</span><span class="token punctuation">;</span>
+        $update<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">'Done'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre><p>Test the application in the browser</p><pre class="  language-html"><code class="  language-html">http://localhost/upload</code></pre><p>Verify into the database.</p><pre class="  language-html"><code class="  language-html">mysql&gt; select * from uploads;
++----+--------------------+-----------------------------------------------------+---------------------+---------------------+
+| id | friendly_file_name | location_file_name                                  | created_at          | updated_at          |
++----+--------------------+-----------------------------------------------------+---------------------+---------------------+
+|  1 | File name you want | images/blB53z0wh5UCh3LApuWvNIS8y6Ju2r1imcBEw8IC.png | 2020-02-05 22:14:42 | 2020-02-05 22:14:42 |
++----+--------------------+-----------------------------------------------------+---------------------+---------------------+
+1 row in set (0.00 sec)
+
+mysql&gt; </code></pre></div><div class="styler" style="display: none;"><div class="background"></div><textarea style="margin-top: 8px; margin-bottom: 8px; height: 433px;">Upload Files Laravel</textarea><br><button>Duplicate</button><button>Delete</button><br><div class="buttons"><button>h1 </button><button>h2 </button><button>p </button><button>html </button><button>css </button><button>javascript </button><button>php </button></div><label for="up" class="btn btn-primary btn-block btn-outlined">Upload Json</label><input id="up" type="file" accept="text/plain" style="display: none;"><label for="down" class="btn btn-primary btn-block btn-outlined">Download Json</label><button id="down" style="display: none;">Export</button><label for="html" class="btn btn-primary btn-block btn-outlined">Download HTML</label><button id="html" style="display: none;">Export</button></div></div></div></div>
+<script src="/static/js/bundle.js"></script><script src="/static/js/0.chunk.js"></script><script src="/static/js/main.chunk.js"></script><script src="/main.5fbc4f5c566fd873bbba.hot-update.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <script src="https://federicozacayan.github.io/tutorial/js/prism.js"></script>
+
+
+
+</body></html>
